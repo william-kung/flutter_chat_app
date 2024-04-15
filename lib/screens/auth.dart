@@ -22,6 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   var _isLogin = true;
   var _enteredEmail = '';
+  var _enteredUsername = '';
   var _enteredPassword = '';
   File? _selectedImage;
   var _isAuthenticating = false;
@@ -59,7 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
         .collection('users')
         .doc(userCredentials.user!.uid)
         .set({
-          'username': 'to be done',
+          'username': _enteredUsername,
           'email': _enteredEmail,
           'image_url': imageUrl,
         });
@@ -128,6 +129,20 @@ class _AuthScreenState extends State<AuthScreen> {
                               _enteredEmail = value!;
                             }
                           ),
+                          if (!_isLogin)
+                            TextFormField(
+                              validator:(value) {
+                                if (value == null || value.isEmpty || value.trim().length < 4) {
+                                  return 'User name must be at least 4 characters long.';
+                                }
+                                return null;
+                              },
+                              decoration: const InputDecoration(labelText: 'Username'),
+                              enableSuggestions: false,
+                              onSaved: (value) {
+                                _enteredUsername = value!;
+                              },
+                            ),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Password',
